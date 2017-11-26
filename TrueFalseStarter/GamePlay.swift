@@ -52,7 +52,7 @@ var playAgainButton: UIButton!
         self.playAgainButton = playAgainButton
     }
     
-    func displayQuestion() {
+    func displayQuestion() {   //TODO have to add a logic to display 4 buttons instead of 2.
         questionDictionary = triviaProvider.provide()
         questionField.text = questionDictionary["Question"]
         playAgainButton.isHidden = true
@@ -60,8 +60,10 @@ var playAgainButton: UIButton!
     
     func displayScore() {
         // Hide the answer buttons
-        trueButton.isHidden = true
-        falseButton.isHidden = true
+        option1Button.isHidden = true
+        option2Button.isHidden = true
+        option3Button.isHidden = true
+        option4Button.isHidden = true
         
         // Display play again button
         playAgainButton.isHidden = false
