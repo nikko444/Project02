@@ -12,13 +12,13 @@ import AudioToolbox
 
 class ViewController: UIViewController {
     
-    let questionsPerRound = 4
-    var questionsAsked = 0
-    var correctQuestions = 0
-    var indexOfSelectedQuestion: Int = 0
-    var questionDictionary: [String: String] = [:]
+    @objc let questionsPerRound = 4
+    @objc var questionsAsked = 0
+    @objc var correctQuestions = 0
+    @objc var indexOfSelectedQuestion: Int = 0
+    @objc var questionDictionary: [String: String] = [:]
     
-    var gameSound: SystemSoundID = 0
+    @objc var gameSound: SystemSoundID = 0
     
     let triviaProvider = TriviaProvider()
     
@@ -41,13 +41,13 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func displayQuestion() {
+    @objc func displayQuestion() {
         questionDictionary = triviaProvider.provide()
         questionField.text = questionDictionary["Question"]
         playAgainButton.isHidden = true
     }
     
-    func displayScore() {
+    @objc func displayScore() {
         // Hide the answer buttons
         trueButton.isHidden = true
         falseButton.isHidden = true
@@ -75,7 +75,7 @@ class ViewController: UIViewController {
         loadNextRoundWithDelay(seconds: 2)
     }
     
-    func nextRound() {
+    @objc func nextRound() {
         if questionsAsked == questionsPerRound {
             // Game is over
             displayScore()
@@ -99,7 +99,7 @@ class ViewController: UIViewController {
     
     // MARK: Helper Methods
     
-    func loadNextRoundWithDelay(seconds: Int) {
+    @objc func loadNextRoundWithDelay(seconds: Int) {
         // Converts a delay in seconds to nanoseconds as signed 64 bit integer
         let delay = Int64(NSEC_PER_SEC * UInt64(seconds))
         // Calculates a time value to execute the method given current time and delay
@@ -111,13 +111,13 @@ class ViewController: UIViewController {
         }
     }
     
-    func loadGameStartSound() {
+    @objc func loadGameStartSound() {
         let pathToSoundFile = Bundle.main.path(forResource: "GameSound", ofType: "wav")
         let soundURL = URL(fileURLWithPath: pathToSoundFile!)
         AudioServicesCreateSystemSoundID(soundURL as CFURL, &gameSound)
     }
     
-    func playGameStartSound() {
+    @objc func playGameStartSound() {
         AudioServicesPlaySystemSound(gameSound)
     }
 }
