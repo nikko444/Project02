@@ -16,14 +16,21 @@ class ViewController: UIViewController {
     var gamePlay = GamePlay()
     
     @IBOutlet weak var questionField: UILabel!
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButton: UIButton!
+    @IBOutlet weak var option1Button: UIButton!
+    @IBOutlet weak var option2Button: UIButton!
+    @IBOutlet weak var option3Button: UIButton!
+    @IBOutlet weak var option4Button: UIButton!
     @IBOutlet weak var playAgainButton: UIButton!
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        gamePlay = GamePlay(questionField: questionField, trueButton: trueButton, falseButton: falseButton, playAgainButton: playAgainButton)
+        gamePlay = GamePlay(questionField: questionField,
+                            option1Button: option1Button,
+                            option2Button: option2Button,
+                            option3Button: option3Button,
+                            option4Button: option4Button,
+                            playAgainButton: playAgainButton)
         gamePlay.loadGameStartSound()
         // Start game
         gamePlay.playGameStartSound()

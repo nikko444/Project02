@@ -23,24 +23,32 @@ var gameSound: SystemSoundID = 0
 let triviaProvider = TriviaProvider()
 
 var questionField: UILabel!
-var trueButton: UIButton!
-var falseButton: UIButton!
+var option1Button: UIButton!
+var option2Button: UIButton!
+var option3Button: UIButton!
+var option4Button: UIButton!
 var playAgainButton: UIButton!
 
     init (){
         questionField = UILabel()
-        trueButton = UIButton()
-        falseButton = UIButton()
+        option1Button = UIButton()
+        option2Button = UIButton()
+        option3Button = UIButton()
+        option4Button = UIButton()
         playAgainButton = UIButton()
     }
 
     init (questionField: UILabel,
-          trueButton: UIButton,
-          falseButton: UIButton,
+          option1Button: UIButton,
+          option2Button: UIButton,
+          option3Button: UIButton,
+          option4Button: UIButton,
           playAgainButton: UIButton){
         self.questionField = questionField
-        self.trueButton = trueButton
-        self.falseButton = falseButton
+        self.option1Button = option1Button
+        self.option2Button = option2Button
+        self.option3Button = option3Button
+        self.option4Button = option4Button
         self.playAgainButton = playAgainButton
     }
     
