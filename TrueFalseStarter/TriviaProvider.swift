@@ -73,7 +73,7 @@ class TriviaProvider {
         return indexOfSelectedQuestion
     }
     
-    func provide () -> [String: String] { //TODO have to modify this to comply with 4 button logic and hide buttons if there are less possible options then 4
+    func provide () -> TriviaModel { //TODO have to modify this to comply with 4 button logic and hide buttons if there are less possible options then 4
         return trivia[randomQuestion()]
     }
 

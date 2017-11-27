@@ -16,12 +16,13 @@ let questionsPerRound = 4
 var questionsAsked = 0
 var correctQuestions = 0
 var indexOfSelectedQuestion: Int = 0
-var questionDictionary: [String: String] = [:]
+var questionDictionary: TriviaModel = TriviaModel(question: "", answer: "", otherOptions: [""])
 
 var gameSound: SystemSoundID = 0
 
 let triviaProvider = TriviaProvider()
 
+    
 var questionField: UILabel!
 var option1Button: UIButton!
 var option2Button: UIButton!
@@ -52,22 +53,51 @@ var playAgainButton: UIButton!
         self.playAgainButton = playAgainButton
     }
     
-    func displayQuestion() {   //TODO have to add a logic to display 4 buttons instead of 2.
+    
+    
+    func displayQuestion() {
         questionDictionary = triviaProvider.provide()
-        questionField.text = questionDictionary["Question"]
+        var allOptions: [String] = [questionDictionary.answer]
+        allOptions += questionDictionary.otherOptions
+        option1Button.isHidden = false
+        option2Button.isHidden = false
+        option3Button.isHidden = false
+        option4Button.isHidden = false
+        switch allOptions.count {
+        case 4:
+            option1Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+            option2Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+            option3Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+            option4Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+        case 3:
+            option1Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+            option2Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+            option3Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+            option4Button.isHidden = true
+        case 2:
+            option1Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+            option2Button.setTitle(allOptions.remove(at: GKRandomSource.sharedRandom().nextInt(upperBound: allOptions.count)), for: .normal)
+            option3Button.isHidden = true
+            option4Button.isHidden = true
+        default:
+            option1Button.setTitle(questionDictionary.answer, for: .normal)
+            option2Button.isHidden = true
+            option3Button.isHidden = true
+            option4Button.isHidden = true
+        }
+        questionField.text = questionDictionary.question
         playAgainButton.isHidden = true
     }
     
     func displayScore() {
         // Hide the answer buttons
-        option1Button.isHidden = true
-        option2Button.isHidden = true
-        option3Button.isHidden = true
-        option4Button.isHidden = true
+       option1Button.isHidden = true
+       option2Button.isHidden = true
+       option3Button.isHidden = true
+       option4Button.isHidden = true
         
         // Display play again button
         playAgainButton.isHidden = false
-        
         questionField.text = "Way to go!\nYou got \(correctQuestions) out of \(questionsPerRound) correct!"
     }
     
@@ -75,9 +105,11 @@ var playAgainButton: UIButton!
     // Increment the questions asked counter
     questionsAsked += 1
     
-    let correctAnswer = questionDictionary["Answer"]
-    
-    if (sender === trueButton &&  correctAnswer == "True") || (sender === falseButton && correctAnswer == "False") {
+    let correctAnswer = questionDictionary.answer
+   if (sender === option1Button && correctAnswer == option1Button.title(for: .normal)) ||
+      (sender === option2Button && correctAnswer == option2Button.title(for: .normal)) ||
+      (sender === option3Button && correctAnswer == option3Button.title(for: .normal)) ||
+      (sender === option4Button && correctAnswer == option4Button.title(for: .normal)){
     correctQuestions += 1
     questionField.text = "Correct!"
     } else {
@@ -99,9 +131,6 @@ var playAgainButton: UIButton!
     }
     
     func playAgain() {
-        // Show the answer buttons
-        trueButton.isHidden = false
-        falseButton.isHidden = false
         questionsAsked = 0
         correctQuestions = 0
         nextRound()
