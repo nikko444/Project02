@@ -17,11 +17,15 @@ var correctQuestions = 0
 var indexOfSelectedQuestion: Int = 0
 var counter = 0
 var reload = true
-
+var clearTimer: Timer?
+    
 let triviaProvider = TriviaProvider()
 let styleProvider = StyleProvider()
-var questionDictionary: TriviaModel = TriviaModel(question: "", answer: "", otherOptions: [""])
 let gameSounds = GameSounds()
+var work = DispatchWorkItem(block: {})
+var questionDictionary: TriviaModel = TriviaModel(question: "", answer: "", otherOptions: [""])
+    
+    
     
 var questionField: UILabel!
 var answerField: UILabel!
@@ -68,6 +72,7 @@ var controlButton: UIButton!
     func gameStart() {
         gameSounds.playGameStartSound()
         displayQuestion()
+        work = DispatchWorkItem(block: {self.nextRound()})
     }
     
     func displayQuestion() {
@@ -87,7 +92,7 @@ var controlButton: UIButton!
         answerField.isHidden = true
         questionField.text = questionDictionary.question
         controlButton.isHidden = true
-        loadNextRoundWithDelay(seconds: 2)
+        loadNextRoundWithDelay(work: work, seconds: 2, stop: false)
     }
     
     
@@ -119,6 +124,7 @@ var controlButton: UIButton!
     
     func checkAnswer(_ sender: UIButton) {
             // Increment the questions asked counter
+        loadNextRoundWithDelay(work: work, seconds: 0, stop: true)
         questionsAsked += 1
         fadeOptionButtons() // Fading option buttons
         let correctAnswer = questionDictionary.answer
@@ -194,15 +200,18 @@ var controlButton: UIButton!
     }
     
     
-    func loadNextRoundWithDelay(seconds: Int) {
+    func loadNextRoundWithDelay(work: DispatchWorkItem,seconds: Int, stop: Bool) {
+
+            if stop {
+            work.cancel()
+            } else {
             // Converts a delay in seconds to nanoseconds as signed 64 bit integer
             let delay = Int64(NSEC_PER_SEC * UInt64(seconds))
             // Calculates a time value to execute the method given current time and delay
             let dispatchTime = DispatchTime.now() + Double(delay) / Double(NSEC_PER_SEC)
         
             // Executes the nextRound method at the dispatch time on the main queue
-            DispatchQueue.main.asyncAfter(deadline: dispatchTime) {
-                self.nextRound()
+            DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: work)
         }
     }
     
