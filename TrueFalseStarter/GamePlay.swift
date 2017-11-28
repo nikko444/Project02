@@ -162,32 +162,32 @@ var controlButton: UIButton!
     
     func nextRound() {
     self.answerField.isHidden = true
-    self.option1Button.backgroundColor = self.self.styleProvider.provideColor("PALE_GREEN")
-    self.option1Button.titleLabel?.font = self.self.styleProvider.provideFont("BUTTON_REGULAR")
-    self.option1Button.setTitleColor(styleProvider.provideColor("WHITE_DISABLED"), for: .disabled)
-    self.option1Button.setTitleColor(styleProvider.provideColor("WHITE"), for: .normal)
+    self.option1Button.backgroundColor = self.self.styleProvider.PALE_GREEN
+    self.option1Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
+    self.option1Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
+    self.option1Button.setTitleColor(styleProvider.WHITE, for: .normal)
     self.option1Button.isEnabled = true
         
-    self.option2Button.backgroundColor = self.self.styleProvider.provideColor("PALE_GREEN")
-    self.option2Button.titleLabel?.font = self.self.styleProvider.provideFont("BUTTON_REGULAR")
-    self.option2Button.setTitleColor(styleProvider.provideColor("WHITE_DISABLED"), for: .disabled)
-    self.option2Button.setTitleColor(styleProvider.provideColor("WHITE"), for: .normal)
+    self.option2Button.backgroundColor = self.self.styleProvider.PALE_GREEN
+    self.option2Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
+    self.option2Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
+    self.option2Button.setTitleColor(styleProvider.WHITE, for: .normal)
     self.option2Button.isEnabled = true
         
-    self.option3Button.backgroundColor = self.self.styleProvider.provideColor("PALE_GREEN")
-    self.option3Button.titleLabel?.font = self.self.styleProvider.provideFont("BUTTON_REGULAR")
-    self.option3Button.setTitleColor(styleProvider.provideColor("WHITE_DISABLED"), for: .disabled)
-    self.option3Button.setTitleColor(styleProvider.provideColor("WHITE"), for: .normal)
+    self.option3Button.backgroundColor = self.self.styleProvider.PALE_GREEN
+    self.option3Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
+    self.option3Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
+    self.option3Button.setTitleColor(styleProvider.WHITE, for: .normal)
     self.option3Button.isEnabled = true
         
-    self.option4Button.backgroundColor = self.self.styleProvider.provideColor("PALE_GREEN")
-    self.option4Button.titleLabel?.font = self.self.styleProvider.provideFont("BUTTON_REGULAR")
-    self.option4Button.setTitleColor(styleProvider.provideColor("WHITE_DISABLED"), for: .disabled)
-    self.option4Button.setTitleColor(styleProvider.provideColor("WHITE"), for: .normal)
+    self.option4Button.backgroundColor = self.self.styleProvider.PALE_GREEN
+    self.option4Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
+    self.option4Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
+    self.option4Button.setTitleColor(styleProvider.WHITE, for: .normal)
     self.option4Button.isEnabled = true
         
-    self.questionField.font = self.self.styleProvider.provideFont("LABEL_REGULAR")
-    self.questionField.textColor = self.self.styleProvider.provideColor("WHITE")
+    self.questionField.font = self.self.styleProvider.LABEL_REGULAR
+    self.questionField.textColor = self.self.styleProvider.WHITE
     
     displayQuestion()
 
@@ -213,20 +213,19 @@ var controlButton: UIButton!
         if sender.title(for: .normal) != button.title(for: .normal) {
             answerField.isHidden = false
             answerField.text = "Sorry, that's a wrong one!"
-            answerField.textColor = styleProvider.provideColor("ORANGE")
-            button.titleLabel?.font = styleProvider.provideFont("BUTTON_BOLD")
-            button.backgroundColor = styleProvider.provideColor("GREEN_DISABLED")
-            //button.setTitleColor(styleProvider.provideColor("WHITE"), for: .disabled)
-            sender.backgroundColor = styleProvider.provideColor("RED")
-            sender.setTitleColor(styleProvider.provideColor("WHITE"), for: .disabled)
+            answerField.textColor = styleProvider.ORANGE
+            button.titleLabel?.font = styleProvider.BUTTON_BOLD
+            button.backgroundColor = styleProvider.GREEN_DISABLED
+            sender.backgroundColor = styleProvider.RED
+            sender.setTitleColor(styleProvider.WHITE, for: .disabled)
         } else {
             answerField.isHidden = false
             answerField.text = "Correct!"
-            answerField.font = styleProvider.provideFont("LABEL_BOLD")
-            answerField.textColor = styleProvider.provideColor("GREEN")
-            button.setTitleColor(styleProvider.provideColor("WHITE"), for: .disabled)
-            button.titleLabel?.font = styleProvider.provideFont("BUTTON_BOLD")
-            button.backgroundColor = styleProvider.provideColor("GREEN")
+            answerField.font = styleProvider.LABEL_BOLD
+            answerField.textColor = styleProvider.GREEN
+            button.setTitleColor(styleProvider.WHITE, for: .disabled)
+            button.titleLabel?.font = styleProvider.BUTTON_BOLD
+            button.backgroundColor = styleProvider.GREEN
         }
     }
 
@@ -262,9 +261,9 @@ var controlButton: UIButton!
         }
     }
     func fadeOptionButtons() {
-    option1Button.backgroundColor = styleProvider.provideColor("PALE_GREEN_DISABLED")
-    option2Button.backgroundColor = styleProvider.provideColor("PALE_GREEN_DISABLED")
-    option3Button.backgroundColor = styleProvider.provideColor("PALE_GREEN_DISABLED")
-    option4Button.backgroundColor = styleProvider.provideColor("PALE_GREEN_DISABLED")
+    option1Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
+    option2Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
+    option3Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
+    option4Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
     }
 }
