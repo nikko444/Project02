@@ -12,7 +12,6 @@ import AudioToolbox
 
 class ViewController: UIViewController {
     
-    let triviaProvider = TriviaProvider()
     var gamePlay = GamePlay()
     
     @IBOutlet weak var questionField: UILabel!
