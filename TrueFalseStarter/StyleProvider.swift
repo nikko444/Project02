@@ -25,4 +25,7 @@ struct StyleProvider {
     let BUTTON_REGULAR = UIFont(name:"HelveticaNeue", size: 16.0)
     let BUTTON_BOLD = UIFont(name:"HelveticaNeue-Bold", size: 17.0)
     
+    let REGULAR_MODE_CAPTION = "Regular Mode 🐢"
+    let LIGHTING_MODE_CAPTION = "Lighting Mode ⚡️"
+    
 }

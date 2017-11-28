@@ -17,12 +17,14 @@ var correctQuestions = 0
 var indexOfSelectedQuestion: Int = 0
 var counter = 0
 var reload = true
-var clearTimer: Timer?
+
+let lightingModeTimeout = 15.0
+var lightingModeTrigger: Bool = false
+var lightningTimer: Timer? = nil
     
 let triviaProvider = TriviaProvider()
 let styleProvider = StyleProvider()
 let gameSounds = GameSounds()
-var work = DispatchWorkItem(block: {})
 var questionDictionary: TriviaModel = TriviaModel(question: "", answer: "", otherOptions: [""])
     
     
@@ -71,11 +73,23 @@ var controlButton: UIButton!
 
     func gameStart() {
         gameSounds.playGameStartSound()
-        displayQuestion()
-        work = DispatchWorkItem(block: {self.nextRound()})
+        resetOptionButtons()
+        option3Button.isHidden = true
+        option4Button.isHidden = true
+        controlButton.isHidden = true
+        answerField.isHidden = true
+        questionField.isHidden = false
+        questionField.text = "Please select a game mode!\n Lighing mode leaves you only 15 seconds to answer a question."
+        option1Button.isHidden = false
+        option1Button.setTitle(styleProvider.REGULAR_MODE_CAPTION, for: .normal)
+        option2Button.isHidden = false
+        option2Button.setTitle(styleProvider.LIGHTING_MODE_CAPTION, for: .normal)
+        
+        //displayQuestion()
     }
     
     func displayQuestion() {
+        questionsAsked += 1
         questionDictionary = triviaProvider.provide()
         var allOptions: [String] = [questionDictionary.answer]
         allOptions += questionDictionary.otherOptions
@@ -92,7 +106,9 @@ var controlButton: UIButton!
         answerField.isHidden = true
         questionField.text = questionDictionary.question
         controlButton.isHidden = true
-        loadNextRoundWithDelay(work: work, seconds: 2, stop: false)
+        if lightingModeTrigger == true {
+        lightningTimer = Timer.scheduledTimer(timeInterval: lightingModeTimeout, target: self, selector: #selector(controlButtonPressed), userInfo: nil, repeats: false)
+        }
     }
     
     
@@ -110,12 +126,14 @@ var controlButton: UIButton!
         controlButton.setTitle("Play Again!", for: .normal)
     }
     
-    func controlButtonPressed(){
+    @objc func controlButtonPressed(){
         if questionsAsked == questionsPerRound {
             // Game is over
             displayScore()
             questionsAsked = 0
             correctQuestions = 0
+        } else if (questionsAsked == 0) {
+            gameStart()
         } else {
             // Continue game
             nextRound()
@@ -123,9 +141,9 @@ var controlButton: UIButton!
     }
     
     func checkAnswer(_ sender: UIButton) {
-            // Increment the questions asked counter
-        loadNextRoundWithDelay(work: work, seconds: 0, stop: true)
-        questionsAsked += 1
+        if lightingModeTrigger == true {
+            lightningTimer?.invalidate()
+        }
         fadeOptionButtons() // Fading option buttons
         let correctAnswer = questionDictionary.answer
         if (sender === option1Button && correctAnswer == option1Button.title(for: .normal)) ||
@@ -135,88 +153,54 @@ var controlButton: UIButton!
             correctQuestions += 1
             gameSounds.playCorrectAnswerSound()
             highlight(sender: sender, button: sender, questionField, answerField)
+            controlButtonCaptionSetter()
+            disableOptionButtons()
         } else if
+            (sender.title(for: .normal) == styleProvider.REGULAR_MODE_CAPTION){
+            lightingModeTrigger = false
+            nextRound()
+        } else if
+            (sender.title(for: .normal) == styleProvider.LIGHTING_MODE_CAPTION){
+            lightingModeTrigger = true
+            nextRound()
+        }
+        else if
             (correctAnswer == option1Button.title(for: .normal)){
             gameSounds.playWrongAnswerSound()
+            disableOptionButtons()
+            controlButtonCaptionSetter()
             highlight(sender: sender, button: option1Button, questionField, answerField)
         } else if
             (correctAnswer == option2Button.title(for: .normal)){
             gameSounds.playWrongAnswerSound()
+            disableOptionButtons()
+            controlButtonCaptionSetter()
             highlight(sender: sender, button: option2Button, questionField, answerField)
         } else if
             (correctAnswer == option3Button.title(for: .normal)){
             gameSounds.playWrongAnswerSound()
+            disableOptionButtons()
+            controlButtonCaptionSetter()
             highlight(sender: sender, button: option3Button, questionField, answerField)
         } else if
-        (correctAnswer == option4Button.title(for: .normal)){
-        gameSounds.playWrongAnswerSound()
-        highlight(sender: sender, button: option4Button, questionField,
-                          answerField)
+            (correctAnswer == option4Button.title(for: .normal)){
+            gameSounds.playWrongAnswerSound()
+            disableOptionButtons()
+            controlButtonCaptionSetter()
+            highlight(sender: sender, button: option4Button, questionField, answerField)
         }
-        option1Button.isEnabled = false
-        option2Button.isEnabled = false
-        option3Button.isEnabled = false
-        option4Button.isEnabled = false
-        if questionsAsked == questionsPerRound {
-        controlButton.setTitle("Check my score", for: .normal)
-        } else {
-        controlButton.setTitle("Next question", for: .normal)
-        }
-        controlButton.isHidden = false
     }
     
     
     func nextRound() {
     self.answerField.isHidden = true
-    self.option1Button.backgroundColor = self.self.styleProvider.PALE_GREEN
-    self.option1Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
-    self.option1Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
-    self.option1Button.setTitleColor(styleProvider.WHITE, for: .normal)
-    self.option1Button.isEnabled = true
-        
-    self.option2Button.backgroundColor = self.self.styleProvider.PALE_GREEN
-    self.option2Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
-    self.option2Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
-    self.option2Button.setTitleColor(styleProvider.WHITE, for: .normal)
-    self.option2Button.isEnabled = true
-        
-    self.option3Button.backgroundColor = self.self.styleProvider.PALE_GREEN
-    self.option3Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
-    self.option3Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
-    self.option3Button.setTitleColor(styleProvider.WHITE, for: .normal)
-    self.option3Button.isEnabled = true
-        
-    self.option4Button.backgroundColor = self.self.styleProvider.PALE_GREEN
-    self.option4Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
-    self.option4Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
-    self.option4Button.setTitleColor(styleProvider.WHITE, for: .normal)
-    self.option4Button.isEnabled = true
-        
+    resetOptionButtons()
     self.questionField.font = self.self.styleProvider.LABEL_REGULAR
     self.questionField.textColor = self.self.styleProvider.WHITE
     
     displayQuestion()
 
     }
-    
-    
-    func loadNextRoundWithDelay(work: DispatchWorkItem,seconds: Int, stop: Bool) {
-
-            if stop {
-            work.cancel()
-            } else {
-            // Converts a delay in seconds to nanoseconds as signed 64 bit integer
-            let delay = Int64(NSEC_PER_SEC * UInt64(seconds))
-            // Calculates a time value to execute the method given current time and delay
-            let dispatchTime = DispatchTime.now() + Double(delay) / Double(NSEC_PER_SEC)
-        
-            // Executes the nextRound method at the dispatch time on the main queue
-            DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: work)
-        }
-    }
-    
- 
-    
     
     func highlight(sender: UIButton, button: UIButton, _ questionField: UILabel, _ answerField: UILabel) {
         if sender.title(for: .normal) != button.title(for: .normal) {
@@ -269,10 +253,53 @@ var controlButton: UIButton!
             option4Button.isHidden = true
         }
     }
+    
+    func resetOptionButtons() {
+        self.option1Button.backgroundColor = self.self.styleProvider.PALE_GREEN
+        self.option1Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
+        self.option1Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
+        self.option1Button.setTitleColor(styleProvider.WHITE, for: .normal)
+        self.option1Button.isEnabled = true
+        
+        self.option2Button.backgroundColor = self.self.styleProvider.PALE_GREEN
+        self.option2Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
+        self.option2Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
+        self.option2Button.setTitleColor(styleProvider.WHITE, for: .normal)
+        self.option2Button.isEnabled = true
+        
+        self.option3Button.backgroundColor = self.self.styleProvider.PALE_GREEN
+        self.option3Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
+        self.option3Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
+        self.option3Button.setTitleColor(styleProvider.WHITE, for: .normal)
+        self.option3Button.isEnabled = true
+        
+        self.option4Button.backgroundColor = self.self.styleProvider.PALE_GREEN
+        self.option4Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
+        self.option4Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
+        self.option4Button.setTitleColor(styleProvider.WHITE, for: .normal)
+        self.option4Button.isEnabled = true
+    }
+    
+    func controlButtonCaptionSetter() {
+        if questionsAsked == questionsPerRound {
+            controlButton.setTitle("Check my score", for: .normal)
+        } else {
+            controlButton.setTitle("Next question", for: .normal)
+        }
+        controlButton.isHidden = false
+    }
+    
     func fadeOptionButtons() {
-    option1Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
-    option2Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
-    option3Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
-    option4Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
+        option1Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
+        option2Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
+        option3Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
+        option4Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
+    }
+    
+    func disableOptionButtons() {
+        option1Button.isEnabled = false
+        option2Button.isEnabled = false
+        option3Button.isEnabled = false
+        option4Button.isEnabled = false
     }
 }
