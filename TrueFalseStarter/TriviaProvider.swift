@@ -21,11 +21,11 @@ class TriviaProvider {
 
         TriviaModel(question: "In what year was the United Nations founded?",
                     answer: "1945",
-                    otherOptions: ["1918","1919","1954"]),
+                    otherOptions: ["1918","1919"/*,"1954"*/]),
         
         TriviaModel(question: "The Titanic departed from the United Kingdom, where was it supposed to arrive?",
                     answer: "New York City",
-                    otherOptions: ["Paris","Washington D.C.","Boston"]),
+                    otherOptions: ["Paris","Washington D.C."/*,"Boston"*/]),
         
         TriviaModel(question: "Which nation produces the most oil?",
                     answer: "Canada",
@@ -73,7 +73,7 @@ class TriviaProvider {
         return indexOfSelectedQuestion
     }
     
-    func provide () -> TriviaModel { //TODO have to modify this to comply with 4 button logic and hide buttons if there are less possible options then 4
+    func provide () -> TriviaModel {
         return trivia[randomQuestion()]
     }
 
