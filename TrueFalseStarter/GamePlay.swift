@@ -20,52 +20,28 @@ var reload = true
 
 let lightingModeTimeout = 15.0
 var lightingModeTrigger: Bool = false
-var lightningTimer: Timer? = nil
+var lightningTimer: Timer?
     
 let triviaProvider = TriviaProvider()
-let styleProvider = StyleProvider()
 let gameSounds = GameSounds()
-var questionDictionary: TriviaModel = TriviaModel(question: "", answer: "", otherOptions: [""])
-    
-    
-    
-var questionField: UILabel!
-var answerField: UILabel!
-var option1Button: UIButton!
-var option2Button: UIButton!
-var option3Button: UIButton!
-var option4Button: UIButton!
-var controlButton: UIButton!
 
-    init (){
-        questionField = UILabel()
-        answerField = UILabel()
-        option1Button = UIButton()
-        option2Button = UIButton()
-        option3Button = UIButton()
-        option4Button = UIButton()
-        controlButton = UIButton()
-    }
+var buttonsHandler: ButtonsHandler?
+var labelsHandler: LabelsHandler?
 
-    init (questionField: UILabel,
+    init? (questionField: UILabel,
           answerField: UILabel,
           option1Button: UIButton,
           option2Button: UIButton,
           option3Button: UIButton,
           option4Button: UIButton,
           controlButton: UIButton){
-        self.questionField = questionField
-        self.answerField = answerField
-        self.option1Button = option1Button
-        self.option1Button.layer.cornerRadius = 10
-        self.option2Button = option2Button
-        self.option2Button.layer.cornerRadius = 10
-        self.option3Button = option3Button
-        self.option3Button.layer.cornerRadius = 10
-        self.option4Button = option4Button
-        self.option4Button.layer.cornerRadius = 10
-        self.controlButton = controlButton
-        self.controlButton.layer.cornerRadius = 10
+        labelsHandler = LabelsHandler(questionField: questionField,
+                                      answerField: answerField)
+        buttonsHandler = ButtonsHandler(option1Button: option1Button,
+                                        option2Button: option2Button,
+                                        option3Button: option3Button,
+                                        option4Button: option4Button,
+                                        controlButton: controlButton)
         gameSounds.loadGameStartSound()
         gameSounds.loadCorrectAnswerSound()
         gameSounds.loadWrongAnswerSound()
@@ -254,31 +230,7 @@ var controlButton: UIButton!
         }
     }
     
-    func resetOptionButtons() {
-        self.option1Button.backgroundColor = self.self.styleProvider.PALE_GREEN
-        self.option1Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
-        self.option1Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
-        self.option1Button.setTitleColor(styleProvider.WHITE, for: .normal)
-        self.option1Button.isEnabled = true
-        
-        self.option2Button.backgroundColor = self.self.styleProvider.PALE_GREEN
-        self.option2Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
-        self.option2Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
-        self.option2Button.setTitleColor(styleProvider.WHITE, for: .normal)
-        self.option2Button.isEnabled = true
-        
-        self.option3Button.backgroundColor = self.self.styleProvider.PALE_GREEN
-        self.option3Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
-        self.option3Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
-        self.option3Button.setTitleColor(styleProvider.WHITE, for: .normal)
-        self.option3Button.isEnabled = true
-        
-        self.option4Button.backgroundColor = self.self.styleProvider.PALE_GREEN
-        self.option4Button.titleLabel?.font = self.self.styleProvider.BUTTON_REGULAR
-        self.option4Button.setTitleColor(styleProvider.WHITE_DISABLED, for: .disabled)
-        self.option4Button.setTitleColor(styleProvider.WHITE, for: .normal)
-        self.option4Button.isEnabled = true
-    }
+
     
     func controlButtonCaptionSetter() {
         if questionsAsked == questionsPerRound {
@@ -289,17 +241,6 @@ var controlButton: UIButton!
         controlButton.isHidden = false
     }
     
-    func fadeOptionButtons() {
-        option1Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
-        option2Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
-        option3Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
-        option4Button.backgroundColor = styleProvider.PALE_GREEN_DISABLED
-    }
+
     
-    func disableOptionButtons() {
-        option1Button.isEnabled = false
-        option2Button.isEnabled = false
-        option3Button.isEnabled = false
-        option4Button.isEnabled = false
-    }
 }

@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var gamePlay = GamePlay()
+    var gamePlay: GamePlay?
     
     @IBOutlet weak var questionField: UILabel!
     @IBOutlet weak var answerField: UILabel!
@@ -31,7 +31,10 @@ class ViewController: UIViewController {
                             option3Button: option3Button,
                             option4Button: option4Button,
                             controlButton: controlButton)
-        gamePlay.gameStart()
+        if (gamePlay == nil) {
+            questionField.text = "Unexpected error!!!\nSometing is wrong with Buttons and/or Lables Outlet referencing"
+        }
+        gamePlay!.gameStart()
     }
 
     override func didReceiveMemoryWarning() {
@@ -40,11 +43,17 @@ class ViewController: UIViewController {
     }
     
     @IBAction func checkAnswer(_ sender: UIButton) {
-        gamePlay.checkAnswer(sender)
+        if (gamePlay == nil) {
+            questionField.text = "Unexpected error!!!\nSometing is wrong with Options Buttons' actions bindings"
+        }
+        gamePlay!.checkAnswer(sender)
     }
 
     @IBAction func controlButtonPressed() {
-        gamePlay.controlButtonPressed()
+        if (gamePlay == nil) {
+            questionField.text = "Unexpected error!!!\nSometing is wrong with Control Button's actions binding"
+        }
+        gamePlay!.controlButtonPressed()
     }
     
 }
