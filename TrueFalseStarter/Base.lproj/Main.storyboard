@@ -123,7 +123,7 @@
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" title="Control Button"/>
                                         <connections>
-                                            <action selector="controlButtonPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="bYh-zk-cFD"/>
+                                            <action selector="controlButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MQ2-v3-w1v"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -156,7 +156,7 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="answerField" destination="p0j-iC-ta6" id="whZ-BN-hzr"/>
-                        <outlet property="controlButton" destination="K17-uy-MvB" id="4ze-j9-DGz"/>
+                        <outlet property="controlButton" destination="K17-uy-MvB" id="dEQ-RH-G9r"/>
                         <outlet property="option1Button" destination="0yU-ez-oiY" id="oQ0-09-fjL"/>
                         <outlet property="option2Button" destination="6Tg-yZ-ALM" id="NfX-zU-w2j"/>
                         <outlet property="option3Button" destination="kC0-lP-JBi" id="vcU-YJ-b1S"/>

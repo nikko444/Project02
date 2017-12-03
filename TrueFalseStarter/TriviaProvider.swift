@@ -94,10 +94,10 @@ class TriviaProvider {
     }
     
     func provide () -> TriviaModel? {
-        guard let outputTrivia = trivia[randomQuestion()] else {
+        guard let unwrappedTrivia = trivia[randomQuestion()] else {
             return nil
         }
-        return outputTrivia
+        return unwrappedTrivia
     }
 
 }

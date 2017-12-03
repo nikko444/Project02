@@ -14,10 +14,49 @@ struct LabelsHandler {
     
     init? (questionField: UILabel?,
            answerField: UILabel?) {
-        guard let assignableQuestionField = questionField, let assignableAnswerField = answerField else {
+        guard let unwrappedQuestionField = questionField, let unwrappedAnswerField = answerField else {
             return nil
         }
-        self.questionField = assignableQuestionField
-        self.answerField = assignableAnswerField
+        self.questionField = unwrappedQuestionField
+        self.answerField = unwrappedAnswerField
+    }
+    
+    func setStartMenu () {
+        resetAllLabels()
+        questionField.text = Captions.startMenuLabel.rawValue
+        questionField.isHidden = false
+    }
+    
+    func setQuestionCaptions (for trivia: TriviaModel) {
+        resetAllLabels()
+        self.questionField.text = trivia.question
+        self.questionField.isHidden = false
+    }
+    
+    func resetAllLabels () {
+        self.questionField.isHidden = true
+        self.answerField.isHidden = true
+        questionField.font = Fonts.labelRegular.provide()
+        questionField.textColor = Colors.white.provide()
+        answerField.font = Fonts.labelRegular.provide()
+        answerField.textColor = Colors.white.provide()
+    }
+    
+    func setAnswerCaptions (isCorrect: Bool) {
+        if isCorrect == true {
+            answerField.textColor = Colors.green.provide()
+            answerField.text = Captions.answerLabelCorrect.rawValue
+            answerField.isHidden = false
+        } else {
+            answerField.textColor = Colors.orange.provide()
+            answerField.text = Captions.answerLabelWrong.rawValue
+            answerField.isHidden = false
+        }
+    }
+    
+    func setScoreCaptions (correct: Int, of: Int) {
+        resetAllLabels()
+        self.questionField.text = Score.show(correct: correct, of: of).provide()
+        self.questionField.isHidden = false
     }
 }

@@ -46,14 +46,29 @@ class ViewController: UIViewController {
         if (gamePlay == nil) {
             questionField.text = "Unexpected error!!!\nSometing is wrong with Options Buttons' actions bindings"
         }
-        gamePlay!.checkAnswer(sender)
+        
+        do {
+        try gamePlay?.optionButtonPressed(sender)
+        } catch FunctionErrors.gamePlayOptionButtonPressed {
+            questionField.text = "Unexpected error!!!\nSometing is wrong with optionButtonPressed() Method of GamePlay class"
+        } catch {
+            questionField.text = "Unexpected error!!!\nUNKNOWN"
+        }
+    
     }
 
-    @IBAction func controlButtonPressed() {
+    @IBAction func controlButtonPressed(_ sender: UIButton) {
         if (gamePlay == nil) {
             questionField.text = "Unexpected error!!!\nSometing is wrong with Control Button's actions binding"
         }
-        gamePlay!.controlButtonPressed()
+        
+        do {
+            try gamePlay!.controlButtonPressed(sender)
+        } catch FunctionErrors.gamePlayControlButtonPressed {
+            questionField.text = "Unexpected error!!!\nSometing is wrong with controlButtonPressed() Method of GamePlay class"
+        } catch {
+            questionField.text = "Unexpected error!!!\nUNKNOWN"
+        }
     }
     
 }
