@@ -15,7 +15,7 @@ var correctAnswerSound: SystemSoundID = 0
 var wrongAnswerSound: SystemSoundID = 0
 var timeoutSound: SystemSoundID = 0
 
-init() {
+init() {   //loading sounds right inside the initializer
         loadGameStartSound()
         loadCorrectAnswerSound()
         loadWrongAnswerSound()
