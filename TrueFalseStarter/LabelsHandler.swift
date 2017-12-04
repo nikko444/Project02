@@ -23,7 +23,7 @@ struct LabelsHandler {
     
     func setStartMenu () {
         resetAllLabels()
-        questionField.text = Captions.startMenuLabel.rawValue
+        questionField.text = StartMenuLabelsCaptions.startMenuLabel.rawValue
         questionField.isHidden = false
     }
     
@@ -42,15 +42,20 @@ struct LabelsHandler {
         answerField.textColor = Colors.white.provide()
     }
     
-    func setAnswerCaptions (isCorrect: Bool) {
-        if isCorrect == true {
-            answerField.textColor = Colors.green.provide()
-            answerField.text = Captions.answerLabelCorrect.rawValue
-            answerField.isHidden = false
-        } else {
-            answerField.textColor = Colors.orange.provide()
-            answerField.text = Captions.answerLabelWrong.rawValue
-            answerField.isHidden = false
+    func setAnswerCaptions (isCorrect: AnswerLabelCaptions) {
+        switch isCorrect {
+            case .correct:
+                answerField.textColor = Colors.green.provide()
+                answerField.text = isCorrect.rawValue
+                answerField.isHidden = false
+            case .wrong:
+                answerField.textColor = Colors.orange.provide()
+                answerField.text = isCorrect.rawValue
+                answerField.isHidden = false
+            case .timeout:
+                answerField.textColor = Colors.red.provide()
+                answerField.text = isCorrect.rawValue
+                answerField.isHidden = false
         }
     }
     

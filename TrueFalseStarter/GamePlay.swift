@@ -11,11 +11,11 @@ import GameKit
 
 class GamePlay {
 
-let questionsPerRound = 10
+let questionsPerRound = 10                      //Game parameters
 var questionsAsked = 0
 var correctQuestions = 0
 
-let lightingModeTimeout = 15.0
+let lightingModeTimeout = 15.0                  //Timer parameters
 var lightingModeTrigger: Bool = false
 var lightningTimer: Timer?
     
@@ -40,9 +40,6 @@ var labelsHandler: LabelsHandler?
                                         option3Button: option3Button,
                                         option4Button: option4Button,
                                         controlButton: controlButton)
-        gameSounds.loadGameStartSound()
-        gameSounds.loadCorrectAnswerSound()
-        gameSounds.loadWrongAnswerSound()
     }
 
     func gameStart () {
@@ -53,22 +50,33 @@ var labelsHandler: LabelsHandler?
         labelsHandler?.setStartMenu()
     }
     
+    @objc func showTimeout () {
+        gameSounds.playTimeoutSound()
+        labelsHandler?.setAnswerCaptions(isCorrect: .timeout)
+        Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(displayQuestion), userInfo: nil, repeats: false)
+    }
+    
     @objc func displayQuestion () throws {
         questionsAsked += 1
-        question = triviaProvider.provide()
-        guard let unwrappedQuestion = question,
-            let unwrappedButtonHandler = buttonsHandler,
-            let unwrappedLabelsHandler = labelsHandler else {
-            throw FunctionErrors.gamePlayDisplayQuestion
-        }
-        do {
-        try unwrappedButtonHandler.setFourOptions(for: unwrappedQuestion)
-        } catch FunctionErrors.buttonsHandlerSetOptions {
-            unwrappedButtonHandler.setThreeOptions(for: unwrappedQuestion)
-        }
-        unwrappedLabelsHandler.setQuestionCaptions(for: unwrappedQuestion)
-        if lightingModeTrigger == true {
-        lightningTimer = Timer.scheduledTimer(timeInterval: lightingModeTimeout, target: self, selector: #selector(displayQuestion), userInfo: nil, repeats: false)
+        
+        if questionsAsked == questionsPerRound {
+            displayScore()
+        } else {
+            question = triviaProvider.provide()
+            guard let unwrappedQuestion = question,
+                let unwrappedButtonHandler = buttonsHandler,
+                let unwrappedLabelsHandler = labelsHandler else {
+                    throw FunctionErrors.gamePlayDisplayQuestion
+            }
+            do {
+                try unwrappedButtonHandler.setFourOptions(for: unwrappedQuestion)
+            } catch FunctionErrors.buttonsHandlerSetOptions {
+                unwrappedButtonHandler.setThreeOptions(for: unwrappedQuestion)
+            }
+            unwrappedLabelsHandler.setQuestionCaptions(for: unwrappedQuestion)
+            if lightingModeTrigger == true {
+                lightningTimer = Timer.scheduledTimer(timeInterval: lightingModeTimeout, target: self, selector: #selector(showTimeout), userInfo: nil, repeats: false)
+            }
         }
     }
     
@@ -83,11 +91,11 @@ var labelsHandler: LabelsHandler?
             throw FunctionErrors.gamePlayControlButtonPressed
         }
         switch title {
-            case Captions.controlButtonNextQuestion.rawValue: try displayQuestion()
-            case Captions.controlButtonCheckScore.rawValue:
+            case ControlButtonCaptions.nextQuestion.rawValue: try displayQuestion()
+            case ControlButtonCaptions.checkScore.rawValue:
                 buttonsHandler?.hideAllButtons()
                 displayScore()
-            case Captions.controlButtonPlayAgain.rawValue: gameStart()
+            case ControlButtonCaptions.playAgain.rawValue: gameStart()
             default: throw FunctionErrors.gamePlayControlButtonPressed
         }
     }
@@ -97,7 +105,7 @@ var labelsHandler: LabelsHandler?
             lightningTimer?.invalidate()
         }
         buttonsHandler?.disableOptionButtons() 
-        if labelsHandler?.questionField.text != Captions.startMenuLabel.rawValue { //Checking if in start menu
+        if labelsHandler?.questionField.text != StartMenuLabelsCaptions.startMenuLabel.rawValue { //Checking if in start menu
             guard let unwrappedQuestion = question,
                 let title = sender.title(for: .normal) else {
                     throw FunctionErrors.gamePlayOptionButtonPressed
@@ -106,14 +114,14 @@ var labelsHandler: LabelsHandler?
                 case unwrappedQuestion.answer: // Correct answer
                     self.correctQuestions += 1
                     self.gameSounds.playCorrectAnswerSound()
-                    self.labelsHandler?.setAnswerCaptions(isCorrect: true)
+                    self.labelsHandler?.setAnswerCaptions(isCorrect: .correct)
                     try self.buttonsHandler?.showCheckedAnswer(question: unwrappedQuestion,
                                                                sender: sender,
                                                                questionsAsked: self.questionsAsked,
                                                                questionsPerRound: self.questionsPerRound)
                 default: //Wrong answer
                     self.gameSounds.playWrongAnswerSound()
-                    self.labelsHandler?.setAnswerCaptions(isCorrect: false)
+                    self.labelsHandler?.setAnswerCaptions(isCorrect: .wrong)
                     try self.buttonsHandler?.showCheckedAnswer(question: unwrappedQuestion,
                                                                sender: sender,
                                                                questionsAsked: self.questionsAsked,
@@ -124,11 +132,11 @@ var labelsHandler: LabelsHandler?
                 throw FunctionErrors.gamePlayOptionButtonPressed
             }
             switch title {
-            case Captions.startMenuLightingMode.rawValue: // Lighting Mode
+            case StartMenuButtonsCaptions.lightingMode.rawValue: // Lighting Mode
                 self.lightingModeTrigger = true
                 try self.displayQuestion()
             default:
-                self.lightingModeTrigger = true //Regular Mode
+                self.lightingModeTrigger = false //Regular Mode
                 try self.displayQuestion()
             }
         }

@@ -40,8 +40,8 @@ struct ButtonsHandler {
     func setStartMenu () {
         resetOptionButtons()
         controlButton.isHidden = true
-        option1Button.setTitle(Captions.startMenuLightingMode.rawValue, for: .normal)
-        option2Button.setTitle(Captions.startMenuRegularMode.rawValue, for: .normal)
+        option1Button.setTitle(StartMenuButtonsCaptions.lightingMode.rawValue, for: .normal)
+        option2Button.setTitle(StartMenuButtonsCaptions.regularMode.rawValue, for: .normal)
         option1Button.isEnabled = true
         option2Button.isEnabled = true
         option1Button.isHidden = false
@@ -121,18 +121,18 @@ struct ButtonsHandler {
     
     func hideAllButtons () {
         option1Button.isHidden = true
-        option1Button.isHidden = true
-        option1Button.isHidden = true
-        option1Button.isHidden = true
+        option2Button.isHidden = true
+        option3Button.isHidden = true
+        option4Button.isHidden = true
         controlButton.isHidden = true
     }
     
-    func setControlButton (for state: ControlButtonState) {
+    func setControlButton (for state: ControlButtonCaptions) {
         switch state {
-        case .nextQuestion:controlButton.setTitle(Captions.controlButtonNextQuestion.rawValue, for: .normal)
-        case .checkScore: controlButton.setTitle(Captions.controlButtonCheckScore.rawValue, for: .normal)
+        case .nextQuestion: controlButton.setTitle(state.rawValue, for: .normal)
+        case .checkScore: controlButton.setTitle(state.rawValue, for: .normal)
         case .playAgain:
-            controlButton.setTitle(Captions.controlButtonPlayAgain.rawValue, for: .normal)
+            controlButton.setTitle(state.rawValue, for: .normal)
         }
         controlButton.isHidden = false
     }
@@ -145,25 +145,28 @@ struct ButtonsHandler {
             case question.answer:
                 self.fadeOptionButtons()
                 sender.titleLabel?.font = Fonts.buttonBold.provide()
+                sender.setTitleColor(Colors.white.provide(), for: .disabled)
                 sender.backgroundColor = Colors.green.provide()
             default:
                 self.fadeOptionButtons()
                 sender.titleLabel?.font = Fonts.buttonBold.provide()
                 sender.backgroundColor = Colors.red.provide()
+                sender.setTitleColor(Colors.white.provide(), for: .disabled)
                 let optionButtons: [UIButton] = [self.option1Button,      // Highlighting the correct answer,
                                                  self.option2Button,      // by looping through all the control buttons
                                                  self.option3Button,      // and comparing its' captions to answer constant
                                                  self.option4Button]      // of TriviaModel Data type
                 for optionButton in optionButtons {
                     if optionButton.titleLabel?.text == question.answer{
+                        optionButton.setTitleColor(Colors.white.provide(), for: .disabled)
                         optionButton.backgroundColor = Colors.green.provide()
                     }
                 }
         }
         if questionsAsked == questionsPerRound {
-            setControlButton(for: ControlButtonState.checkScore)
+            setControlButton(for: ControlButtonCaptions.checkScore)
         } else {
-            setControlButton(for: ControlButtonState.nextQuestion)
+            setControlButton(for: ControlButtonCaptions.nextQuestion)
         }
     }
 }

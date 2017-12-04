@@ -13,6 +13,15 @@ class GameSounds {
 var gameStartSound: SystemSoundID = 0
 var correctAnswerSound: SystemSoundID = 0
 var wrongAnswerSound: SystemSoundID = 0
+var timeoutSound: SystemSoundID = 0
+
+init() {
+        loadGameStartSound()
+        loadCorrectAnswerSound()
+        loadWrongAnswerSound()
+        loadTimeoutSound()
+    }
+    
     
 func loadGameStartSound() {
     let pathToSoundFile = Bundle.main.path(forResource: "GameSound", ofType: "wav")
@@ -32,6 +41,12 @@ func loadWrongAnswerSound() {
         AudioServicesCreateSystemSoundID(soundURL as CFURL, &wrongAnswerSound)
     }
     
+func loadTimeoutSound() {
+        let pathToSoundFile = Bundle.main.path(forResource: "TimeoutBuzz", ofType: "wav")
+        let soundURL = URL(fileURLWithPath: pathToSoundFile!)
+        AudioServicesCreateSystemSoundID(soundURL as CFURL, &timeoutSound)
+    }
+    
     
 func playGameStartSound() {
     AudioServicesPlaySystemSound(gameStartSound)
@@ -45,4 +60,7 @@ func playWrongAnswerSound() {
         AudioServicesPlaySystemSound(wrongAnswerSound)
     }
     
+func playTimeoutSound() {
+        AudioServicesPlaySystemSound(timeoutSound)
+    }
 }
