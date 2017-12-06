@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum Fonts {
+enum Fonts {    //FONTS
     case labelRegular
     case labelBold
     case buttonRegular
